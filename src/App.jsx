@@ -23,7 +23,7 @@ const App = () => {
       <Navbar />
       <div className="flex">
         <Sidebar />
-        <div className=" w-full">
+        <div className="w-full">
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/evox" element={<Createvote />} />
