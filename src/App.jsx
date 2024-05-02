@@ -12,6 +12,9 @@ import Student from "./pages/vote/Student";
 import Display from "./pages/common/Display";
 import Sidebar from "./component/Sidebar";
 import Login from "./Auth/Login";
+import ElectionUpdate from "./pages/vote/update/ElectionUpdate";
+import RoleUpdate from "./pages/vote/update/RoleUpdate";
+import MyCandidates from "./pages/vote/MyCandidates";
 const App = () => {
   const ref = useRef(null);
   useEffect(() => {
@@ -27,9 +30,12 @@ const App = () => {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/evox" element={<Createvote />} />
+            <Route path="/evox/update/:id" element={<ElectionUpdate />} />
             <Route path="/addroles" element={<Roles />} />
+            <Route path="/addroles/update/:id" element={<RoleUpdate />} />
             <Route path="/candidate" element={<Candidate />} />
             <Route path="/student" element={<Student />} />
+            <Route path="/mycandidates" element={<MyCandidates />} />
             <Route path="/dispslay" element={<Display />} />
             <Route path="/settings" element={<Settings />} />
             <Route path="/about" element={<About />} />
