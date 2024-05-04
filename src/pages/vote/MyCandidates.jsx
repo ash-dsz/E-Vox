@@ -55,7 +55,7 @@ function MyCandidates() {
     setRole(selectedCandidate.roleId);
     setCandidateName(selectedCandidate.candidateName);
     setCandidateClass(selectedCandidate.candidateClass);
-    setCandidateImg(selectedCandidate.candidateImg);
+    setCandidateImg(selectedCandidate.candidateImage);
   };
   return (
     <div className="app-container content-around">
@@ -76,6 +76,9 @@ function MyCandidates() {
             <tr>
               <th scope="col" className="px-6 py-3">
                 Election
+              </th>
+              <th scope="col" className="px-6 py-3">
+                Profile
               </th>
               <th scope="col" className="px-6 py-3">
                 Role
@@ -100,6 +103,17 @@ function MyCandidates() {
               >
                 <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                   {candidate.evoxId}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <div className="flex items-center">
+                    <div className="flex-shrink-0 h-10 w-10">
+                      <img
+                        className="h-full w-full rounded-full"
+                        src={`http://localhost:8080/images/${candidate.candidateImage}`}
+                        alt="User"
+                      />
+                    </div>
+                  </div>
                 </td>
                 <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                   {candidate.roleId}

@@ -1,48 +1,77 @@
 import React, { useState, useEffect } from "react";
 import { ToastContainer, toast } from "react-toastify";
+import { moveFile } from "move-file";
+import axios from "axios";
+
 import "react-toastify/dist/ReactToastify.css";
 function Candidate() {
   const [election, setElection] = useState("");
   const [role, setRole] = useState("");
-  const [candidateImg, setCandidateImg] = useState("");
+  const [candidateImg, setCandidateImg] = useState(null);
   const [candidateName, setCandidateName] = useState("");
   const [candidateClass, setCandidateClass] = useState("");
+  const [candidateImgTxt, setCandidateimgTxt] = useState("");
+
   const status = 1;
 
   // http://localhost:8080/candidate/addcandidate
 
-  const saveCandidate = (e) => {
+  const saveCandidate = async (e) => {
     e.preventDefault();
 
-    if (!election || !role || !candidateName || !candidateClass) {
+    if (
+      !election ||
+      !role ||
+      !candidateName ||
+      !candidateClass ||
+      !candidateImg
+    ) {
       toast.error("All fields are required");
       return;
     }
 
-    const data = {
-      evoxId: election,
-      roleId: role,
-      candidateName: candidateName,
-      candidateClass: candidateClass,
-      candidateImg: candidateImg,
-      status: status,
-    };
+    const formData = new FormData();
+    formData.append("image", candidateImg);
+    try {
+      const response = await axios.post(
+        "http://localhost:8080/candidate/uploadimage",
+        formData
+      );
+      const candidateData = {
+        evoxId: election,
+        roleId: role,
+        candidateName: candidateName,
+        candidateClass: candidateClass,
+        candidateImage: response.data, // Use response.data directly
+        status: status,
+      };
 
-    fetch("http://localhost:8080/candidate/addcandidate", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    }).then(() => {
-      toast.success("🦄 New Candidate Added!");
-      setElection("");
-      setRole("");
-      setCandidateImg("");
-      setCandidateName("");
-      setCandidateClass("");
-    });
+      // Now submit candidate data to another endpoint
+      fetch("http://localhost:8080/candidate/addcandidate", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(candidateData),
+      })
+        .then(() => {
+          toast.success("🦄 New Candidate Added!");
+          setElection("");
+          setRole("");
+          setCandidateImg(null);
+          setCandidateName("");
+          setCandidateClass("");
+        })
+        .catch((error) => {
+          console.error("Error uploading image:", error);
+          toast.error("Failed to upload image");
+        });
+    } catch (error) {
+      console.error("Error uploading image:", error);
+      toast.error("Failed to upload image");
+    }
   };
+
   const [electionList, setElectionList] = useState([]);
   var [roleList, setRoleList] = useState([]);
   //fetch all elections created to display option for select
@@ -56,6 +85,7 @@ function Candidate() {
         console.error("Error fetching election list:", error);
       });
   });
+
   useEffect(() => {
     fetch("http://localhost:8080/roles/getall")
       .then((res) => res.json())
